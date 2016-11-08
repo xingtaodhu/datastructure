@@ -19,12 +19,13 @@ struct Node {
 typedef struct Node *List;
 
 
-List read(){
+List read(int *i){
     List head = (List)malloc(sizeof(struct Node));
     head->next = NULL;
     struct Node *rear = head,*temp;
     int head_addr,node_count,reverse_node_count;
     cin>>head_addr>>node_count>>reverse_node_count;
+    *i = node_count/reverse_node_count;
     int m,n,p;
     while(node_count--){
         cin>>m>>n>>p;
@@ -76,14 +77,26 @@ void reverse_List(List L) {
     }
 }
 
-void reverse_List(List L) {
-    struct Node *pre,*cur = NULL,*next = NULl;
+List reverse_List(List L,int K){
+    int count = 1;
+    struct Node *cur = L->next,*old = cur->next;
+    struct Node *temp;
+    while(count++<K){
+        temp = old->next;
+        old->next = cur;
+        cur = old;
+        old = temp;
+    }
+    L->next->next = old;
+    L->next = cur;
+    return cur;
+
 }
 
 
 int main(){
-    List L = read();
-    reverse_List(L);
+    int i;
+    List L = read(i);
     cout<<endl;
     printList(L);
     system("pause");
