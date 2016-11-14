@@ -19,12 +19,13 @@ struct Node {
 typedef struct Node *List;
 
 
-List read(){
+List read(int *K){
     List head = (List)malloc(sizeof(struct Node));
     head->next = NULL;
     struct Node *rear = head,*temp;
     int head_addr,node_count,reverse_node_count;
     cin>>head_addr>>node_count>>reverse_node_count;
+    *K = reverse_node_count;
     int m,n,p;
     while(node_count--){
         cin>>m>>n>>p;
@@ -76,15 +77,52 @@ void reverse_List(List L) {
     }
 }
 
-void reverse_List(List L) {
-    struct Node *pre,*cur = NULL,*next = NULl;
+List reverse_List(List L,int K) {
+    int count = 1;
+    struct Node *cur,*after,*temp,*pre;
+    cur = L->next;
+    after = cur->next;
+    while(count++ < K){
+        temp = after->next;
+        after->next = cur;
+        after->next_address = cur->address;
+        cur = after;
+        after = temp;
+    }
+
+    L->next->next = after;
+    if(after)
+        L->next->next_address = after->address;
+    else
+        L->next->next_address = -1;
+    pre = L->next;
+    L->next = cur;
+    L->next_address = cur->address;
+    return pre;
 }
 
+int ListLength(List L) {
+    int count = 0;
+    if(!L->next) {
+        return 0;
+    }
+    while(L->next) {
+        count++;
+        L = L->next;
+    }
+    return count;
+}
 
 int main(){
-    List L = read();
-    reverse_List(L);
-    cout<<endl;
+    int i,K;
+    List L = read(&K);
+    i = ListLength(L)/K;
+    List temp = L;
+    for(int j = 0;j < i;j++){
+        temp = reverse_List(temp,K);
+    }
     printList(L);
     system("pause");
 }
+
+
