@@ -56,6 +56,13 @@ void InsertEdge(LGraph Graph,Edge E){
     p->Weight = E->Weight;
     p->Next = Graph->G[E->V1].FirstEdge;
     Graph->G[E->V1].FirstEdge = p;
+
+    /*无向图还要再插入一次边*/
+    p = new struct AdjVNode;
+    p->AdjV = E->V1;
+    p->Weight = E->Weight;
+    p->Next = Graph->G[E->V2].FirstEdge;
+    Graph->G[E->V2].FirstEdge = p;
 }
 
 LGraph BuildGraph(){
@@ -98,9 +105,10 @@ void BFS(LGraph Graph,Vertex V,void (*Visit)(Vertex) )
     PtrToAdjVNode P;
     queue<Vertex> q;
     Visit(V);
+    Visited[V]  = true;
     q.push(V);
     while(!q.empty()){
-        while(P = Graph->G[q.front()].FirstEdge;P;P = P->Next){
+        for(P = Graph->G[q.front()].FirstEdge;P;P = P->Next){
             if(!Visited[P->AdjV]){
                 Visit(P->AdjV);
                 Visited[P->AdjV] = true;
@@ -113,5 +121,5 @@ void BFS(LGraph Graph,Vertex V,void (*Visit)(Vertex) )
 
 int main(){
     LGraph Graph = BuildGraph();
-    BFS(Graph,0,Visit);
+    BFS(Graph,1,Visit);
 }
